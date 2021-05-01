@@ -1,28 +1,23 @@
 {
-  "name": "backend",
+  "name": "kipi-backend",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "serve": "node server.js"
   },
-  "keywords": [],
-  "author": "",
+  "author": "anonymousliem",
   "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-validator": "^6.4.0",
-    "jsonfile": "^6.1.0",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.10",
     "mysql": "^2.18.1",
-    "mysql2": "^2.2.5",
-    "sequelize": "^6.6.2",
-    "swagger-ui-express": "^4.1.4"
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }
