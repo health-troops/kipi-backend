@@ -47,7 +47,7 @@ conn.connect((err) => {
             console.log(err)
           }
           else{
-            console.log(result)
+           
           }
       });
 
@@ -59,10 +59,21 @@ conn.connect((err) => {
             console.log(err)
           }
           else{
-            console.log(result)
+            
           }
       });
 
+      var sqlTableKipiDaily =
+      "CREATE TABLE IF NOT EXISTS Kipi_Daily (id_account INT NOT NULL, kejang BOOLEAN NOT NULL, diare BOOLEAN NOT NULL, etc TEXT, FOREIGN KEY (id_account) REFERENCES account(id_account)) ";
+
+      conn.query(sqlTableKipiDaily, function (err, result) {
+          if (err !== null) {
+            console.log(err)
+          }
+          else{
+            console.log(result)
+          }
+      });
 
   } else {
     console.log("Connection Failed");
