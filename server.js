@@ -138,16 +138,9 @@ app.delete("/api/accounts/:id", (req, res) => {
 
 //LOGIN USERTS
 app.post("/api/login", function (req, res) {
-  let sql =
-    "SELECT * FROM account WHERE email='" +
-    req.body.email +
-    "' AND password='" +
-    md5(req.body.password) +
-    "'";
+  let sql ="SELECT * FROM account WHERE email= ?  AND password= ? LIMIT 1";
 
-  let values = [req.body.email, md5(req.body.password)];
-
-  conn.query(sql, [values], (err, results) => {
+  conn.query(sql, [req.body.email, md5(req.body.password)], (err, results) => {
     if (err) throw err;
     res.send(
       JSON.stringify({
