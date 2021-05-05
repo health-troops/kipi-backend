@@ -52,7 +52,7 @@ conn.connect((err) => {
       });
 
       var sqlTableHealtCheck =
-      "CREATE TABLE IF NOT EXISTS Healt_Check (id_healthcheck INT NOT NULL, id_account INT NOT NULL, asma BOOLEAN NOT NULL, diabetes BOOLEAN NOT NULL, imun BOOLEAN NOT NULL, hamil BOOLEAN NOT NULL, hipertensi BOOLEAN NOT NULL, kardiovas BOOLEAN NOT NULL, kanker BOOLEAN NOT NULL, ginjal BOOLEAN NOT NULL, hati BOOLEAN NOT NULL, paru BOOLEAN NOT NULL, tbc BOOLEAN NOT NULL, lainnya TEXT, PRIMARY KEY (id_healthcheck), FOREIGN KEY (id_account) REFERENCES account(id_account)) ";
+      "CREATE TABLE IF NOT EXISTS Healt_Check (id_healthcheck INT NOT NULL AUTO_INCREMENT, id_account INT NOT NULL, asma BOOLEAN NOT NULL, diabetes BOOLEAN NOT NULL, imun BOOLEAN NOT NULL, hamil BOOLEAN NOT NULL, hipertensi BOOLEAN NOT NULL, kardiovas BOOLEAN NOT NULL, kanker BOOLEAN NOT NULL, ginjal BOOLEAN NOT NULL, hati BOOLEAN NOT NULL, paru BOOLEAN NOT NULL, tbc BOOLEAN NOT NULL, lainnya TEXT, PRIMARY KEY (id_healthcheck), FOREIGN KEY (id_account) REFERENCES account(id_account)) ";
 
       conn.query(sqlTableHealtCheck, function (err, result) {
           if (err !== null) {
@@ -244,7 +244,7 @@ app.get("/api/healthcheck/:id", (req, res) => {
 
 //post healthceck
 app.post("/api/healthcheck", function (req, res) {
-  let sql = `INSERT INTO Healt_Check(id_account, asma, diabetes, imun, hamil, hipertensi, kardiovas, kanker, ginjal, hati, paru, tbc, lainnya TEXT) VALUES (?)`;
+  let sql = `INSERT INTO Healt_Check(id_account, asma, diabetes, imun, hamil, hipertensi, kardiovas, kanker, ginjal, hati, paru, tbc, lainnya) VALUES (?)`;
 
   let values = [req.body.id_account, req.body.asma, req.body.diabetes, req.body.imun, req.body.hamil, req.body.hipertensi, req.body.kardiovas, req.body.kanker, req.body.ginjal, req.body.hati, req.body.paru, req.body.tbc, req.body.lainnya];
 
