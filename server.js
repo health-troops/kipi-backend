@@ -196,7 +196,7 @@ app.get("/api/users/:id", (req, res) => {
 app.post("/api/users", function (req, res) {
   let sql = `INSERT INTO user (id_account, nama, gender, ttl , no_hp, nama_ibu, nama_ayah , provinsi, kota, kec, kel, alamat) VALUES (?)`;
 
-  let values = [req.body.nama, req.body.gender, req.body.ttl, req.body.no_hp, req.body.nama_ibu, req.body.nama_ayah, req.body.provinsi, req.body.kota, req.body.kec, req.body.kel, req.body.alamat];
+  let values = [req.body.id_account, req.body.nama, req.body.gender, req.body.ttl, req.body.no_hp, req.body.nama_ibu, req.body.nama_ayah, req.body.provinsi, req.body.kota, req.body.kec, req.body.kel, req.body.alamat];
 
   conn.query(sql, [values], (err, results) => {
     if (err) throw err;
