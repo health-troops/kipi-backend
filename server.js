@@ -71,7 +71,7 @@ conn.connect((err) => {
             console.log(err)
           }
           else{
-            console.log(result)
+           
           }
       });
 
@@ -173,6 +173,55 @@ app.post("/api/register", function (req, res) {
   });
 /****  END CRUD ACCOUNT*****/
 
+/*** START CRUD USER */
+//show all user
+app.get("/api/users", (req, res) => {
+  let sql = "SELECT * FROM user";
+  let query = conn.query(sql, (err, results) => {
+    if (err) throw err;
+    res.send(JSON.stringify({ status: 200, error: null, response: results }));
+  });
+});
+
+//show single user
+app.get("/api/users/:id", (req, res) => {
+  let sql = "SELECT * FROM user WHERE id_account=" + req.params.id;
+  let query = conn.query(sql, (err, results) => {
+    if (err) throw err;
+    res.send(JSON.stringify({ status: 200, error: null, response: results }));
+  });
+});
+
+//post user
+app.post("/api/users", function (req, res) {
+  let sql = `INSERT INTO user (id_account, nama, gender, ttl , no_hp, nama_ibu, nama_ayah , provinsi, kota, kec, kel, alamat) VALUES (?)`;
+
+  let values = [req.body.nama, req.body.gender, req.body.ttl, req.body.no_hp, req.body.nama_ibu, req.body.nama_ayah, req.body.provinsi, req.body.kota, req.body.kec, req.body.kel, req.body.alamat];
+
+  conn.query(sql, [values], (err, results) => {
+    if (err) throw err;
+    res.send(JSON.stringify({ status: 200, error: null, response: results }));
+  });
+});
+
+//update users
+app.put("/api/users/:id", (req, res) => {
+  let sql ="UPDATE user SET nama='"+req.body.nama +"', gender='" + req.body.gender +"', ttl='"+req.body.ttl+"', no_hp='"+req.body.no_hp+"', nama_ibu='"+req.body.nama_ibu+"', nama_ayah='"+req.body.nama_ayah+"', provinsi='"+req.body.provinsi+"', kota='"+req.body.kota+"', kec='"+req.body.kec+"', kel='"+req.body.kel+"', alamat='"+req.body.alamat+"' WHERE id_account=" + req.params.id;
+  let query = conn.query(sql, (err, results) => {
+    if (err) throw err;
+    res.send(JSON.stringify({ status: 200, error: null, response: results }));
+  });
+});
+
+//Delete users
+app.delete("/api/users/:id", (req, res) => {
+  let sql = "DELETE FROM user WHERE id_account=" + req.params.id + "";
+  let query = conn.query(sql, (err, results) => {
+    if (err) throw err;
+    res.send(JSON.stringify({ status: 200, error: null, response: results }));
+  });
+});
+/*** END CRUD USER */
 
 /*** START CRUP DAILY_KIPI*/
 //get all healthcheck
