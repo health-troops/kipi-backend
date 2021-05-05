@@ -182,9 +182,9 @@ app.post("/api/users", function (req, res) {
 
 //update users
 app.put("/api/users/:id", (req, res) => {
-  let sql ="UPDATE user SET nama= ?, gender= ?, ttl= ?, no_hp= ? , nama_ibu= ?, nama_ayah= ? , provinsi= ?, kota= ?, kec= ? , kel= ? , alamat= ? WHERE id_account=" + req.params.id;
-  let values = [req.body.nama, req.body.gender, req.body.ttl, req.body.no_hp, req.body.nama_ibu, req.body.nama_ayah, req.body.provinsi, req.body.kota, req.body.kec, req.body.kel, req.body.alamat];
-  let query = conn.query(sql, [values], (err, results) => {
+  let sql ="UPDATE user SET nama= ? , gender= ?, ttl= ?, no_hp= ? , nama_ibu= ?, nama_ayah= ? , provinsi= ?, kota= ?, kec= ? , kel= ? , alamat= ? WHERE id_account=" + req.params.id;
+
+  let query = conn.query(sql, [req.body.nama, req.body.gender, req.body.ttl, req.body.no_hp, req.body.nama_ibu, req.body.nama_ayah, req.body.provinsi, req.body.kota, req.body.kec, req.body.kel, req.body.alamat], (err, results) => {
     if (err) throw err;
     res.send(JSON.stringify({ status: 200, error: null, response: results }));
   });
@@ -234,9 +234,8 @@ app.post("/api/healthcheck", function (req, res) {
 
 //update healtcheack
 app.put("/api/healthcheck/:id", (req, res) => {
-  let sql = "UPDATE Healt_Check SET id_account= ? , asma= ? , diabetes= ? , imun= ? , hamil= ? , hipertensi= ? , kardiovas= ? , kanker= ? , ginjal= ?, hati= ? , paru= ?, tbc= ? , lainnya= ? WHERE id_healthcheck=" +req.params.id;
-  let values = [req.body.id_account, req.body.asma, req.body.diabetes, req.body.imun, req.body.hamil, req.body.hipertensi, req.body.kardiovas, req.body.kanker, req.body.ginjal, req.body.hati, req.body.paru, req.body.tbc, req.body.lainnya];
-  let query = conn.query(sql, [values], (err, results) => {
+  let sql = "UPDATE Healt_Check SET id_account= ? , asma= ? , diabetes= ? , imun= ? , hamil= ? , hipertensi= ? , kardiovas= ? , kanker= ? , ginjal= ?, hati= ? , paru= ?, tbc= ? , lainnya= ? WHERE id_healthcheck=" +req.params.id
+  let query = conn.query(sql, [req.body.id_account, req.body.asma, req.body.diabetes, req.body.imun, req.body.hamil, req.body.hipertensi, req.body.kardiovas, req.body.kanker, req.body.ginjal, req.body.hati, req.body.paru, req.body.tbc, req.body.lainnya], (err, results) => {
     if (err) throw err;
     res.send(JSON.stringify({ status: 200, error: null, response: results }));
   });
