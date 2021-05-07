@@ -75,6 +75,18 @@ conn.connect((err) => {
           }
       });
 
+      var sqlTableFormChecklist =
+      "CREATE TABLE IF NOT EXISTS Form_Checklist (id_form INT NOT NULL, id_checklist INT NOT NULL, FOREIGN KEY (id_form) REFERENCES Form_Kipi_Daily(id)) ";
+
+      conn.query(sqlTableFormChecklist, function (err, result) {
+          if (err !== null) {
+            console.log(err)
+          }
+          else{
+           
+          }
+      });
+
   } else {
     console.log("Connection Failed");
   }
