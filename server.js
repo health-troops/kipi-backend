@@ -87,6 +87,18 @@ conn.connect((err) => {
           }
       });
 
+      var sqlTableChecklist =
+      "CREATE TABLE IF NOT EXISTS Checklist (id INT NOT NULL, nama_gejala VARCHAR(255), FOREIGN KEY (id) REFERENCES Form_Checklist(id_form)) ";
+
+      conn.query(sqlTableChecklist, function (err, result) {
+          if (err !== null) {
+            console.log(err)
+          }
+          else{
+           
+          }
+      });
+
   } else {
     console.log("Connection Failed");
   }
