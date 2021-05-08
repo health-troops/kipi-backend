@@ -40,7 +40,7 @@ conn.connect((err) => {
     });
 
     var sqlTableUser =
-      "CREATE TABLE IF NOT EXISTS user (id_account INT NOT NULL, nama VARCHAR(255) NOT NULL, gender ENUM('laki-laki', 'perempuan') NOT NULL, ttl DATE NOT NULL, no_hp BIGINT NOT NULL, nama_ibu VARCHAR(255) NOT NULL, nama_ayah VARCHAR(255) NOT NULL, provinsi VARCHAR(255) NOT NULL, kota VARCHAR(255) NOT NULL, kec VARCHAR(255) NOT NULL, kel VARCHAR(255) NOT NULL, alamat TEXT NOT NULL, PRIMARY KEY(id_account), FOREIGN KEY (id_account) REFERENCES account(id_account)) ";
+      "CREATE TABLE IF NOT EXISTS user (id_account INT NOT NULL, nama VARCHAR(255) NOT NULL, gender ENUM('laki-laki', 'perempuan') NOT NULL, ttl DATE NOT NULL, no_hp VARCHAR(20) NOT NULL, nama_ibu VARCHAR(255) NOT NULL, nama_ayah VARCHAR(255) NOT NULL, provinsi VARCHAR(255) NOT NULL, kota VARCHAR(255) NOT NULL, kec VARCHAR(255) NOT NULL, kel VARCHAR(255) NOT NULL, alamat TEXT NOT NULL, PRIMARY KEY(id_account), FOREIGN KEY (id_account) REFERENCES account(id_account)) ";
 
       conn.query(sqlTableUser, function (err, result) {
           if (err !== null) {
