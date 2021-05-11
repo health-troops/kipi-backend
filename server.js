@@ -40,7 +40,7 @@ conn.connect((err) => {
     });
 
     var sqlTableUser =
-      "CREATE TABLE IF NOT EXISTS user (id_account INT NOT NULL, nama VARCHAR(255) NOT NULL, gender ENUM('laki-laki', 'perempuan') NOT NULL, ttl DATE NOT NULL, no_hp VARCHAR(20) NOT NULL, nama_ibu VARCHAR(255) NOT NULL, nama_ayah VARCHAR(255) NOT NULL, provinsi VARCHAR(255) NOT NULL, kota VARCHAR(255) NOT NULL, kec VARCHAR(255) NOT NULL, kel VARCHAR(255) NOT NULL, alamat TEXT NOT NULL, PRIMARY KEY(id_account), FOREIGN KEY (id_account) REFERENCES account(id_account)) ";
+      "CREATE TABLE IF NOT EXISTS user (id_account INT NOT NULL, nama VARCHAR(255) NOT NULL, gender ENUM('laki-laki', 'perempuan') NOT NULL, tempat_lahir VARCHAR(50), ttl DATE NOT NULL, no_hp VARCHAR(20) NOT NULL, nama_ibu VARCHAR(255) NOT NULL, nama_ayah VARCHAR(255) NOT NULL, provinsi VARCHAR(255) NOT NULL, kota VARCHAR(255) NOT NULL, kec VARCHAR(255) NOT NULL, kel VARCHAR(255) NOT NULL, alamat TEXT NOT NULL, PRIMARY KEY(id_account), FOREIGN KEY (id_account) REFERENCES account(id_account)) ";
 
       conn.query(sqlTableUser, function (err, result) {
           if (err !== null) {
@@ -194,9 +194,9 @@ app.get("/api/users/:id", (req, res) => {
 
 //post user
 app.post("/api/users", function (req, res) {
-  let sql = `INSERT INTO user (id_account, nama, gender, ttl , no_hp, nama_ibu, nama_ayah , provinsi, kota, kec, kel, alamat) VALUES (?)`;
+  let sql = `INSERT INTO user (id_account, nama, gender, tempat_lahir, ttl , no_hp, nama_ibu, nama_ayah , provinsi, kota, kec, kel, alamat) VALUES (?)`;
 
-  let values = [req.body.id_account, req.body.nama, req.body.gender, req.body.ttl, req.body.no_hp, req.body.nama_ibu, req.body.nama_ayah, req.body.provinsi, req.body.kota, req.body.kec, req.body.kel, req.body.alamat];
+  let values = [req.body.id_account, req.body.nama, req.body.gender, req.body.tempat_lahir, req.body.ttl, req.body.no_hp, req.body.nama_ibu, req.body.nama_ayah, req.body.provinsi, req.body.kota, req.body.kec, req.body.kel, req.body.alamat];
 
   conn.query(sql, [values], (err, results) => {
     if (err) throw err;
@@ -206,9 +206,9 @@ app.post("/api/users", function (req, res) {
 
 //update users
 app.put("/api/users/:id", (req, res) => {
-  let sql ="UPDATE user SET nama= ? , gender= ?, ttl= ?, no_hp= ? , nama_ibu= ?, nama_ayah= ? , provinsi= ?, kota= ?, kec= ? , kel= ? , alamat= ? WHERE id_account=" + req.params.id;
+  let sql ="UPDATE user SET nama= ? , gender= ?, tempat_lahir=?, ttl= ?, no_hp= ? , nama_ibu= ?, nama_ayah= ? , provinsi= ?, kota= ?, kec= ? , kel= ? , alamat= ? WHERE id_account=" + req.params.id;
 
-  let query = conn.query(sql, [req.body.nama, req.body.gender, req.body.ttl, req.body.no_hp, req.body.nama_ibu, req.body.nama_ayah, req.body.provinsi, req.body.kota, req.body.kec, req.body.kel, req.body.alamat], (err, results) => {
+  let query = conn.query(sql, [req.body.nama, req.body.gender, req.body.tempat_lahir ,req.body.ttl, req.body.no_hp, req.body.nama_ibu, req.body.nama_ayah, req.body.provinsi, req.body.kota, req.body.kec, req.body.kel, req.body.alamat], (err, results) => {
     if (err) throw err;
     res.send(JSON.stringify({ status: 200, error: null, response: results }));
   });
