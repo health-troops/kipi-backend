@@ -138,8 +138,8 @@ app.put("/api/accounts/:id", (req, res, next) => {
   try {
     let sql = "UPDATE account SET email= ? , password= ? WHERE id_account=" + req.params.id;
     let query = conn.query(sql, [req.body.email, md5(req.body.password)], (err, results) => {
-      if (err) throw err.message;
-      res.send(JSON.stringify({ status: 200, error: null, response: results }));
+      res.send(JSON.stringify({error: err, response: results }));
+    
     });
   } catch (error) {
     return error.message 
@@ -175,14 +175,19 @@ app.post("/api/login", function (req, res) {
 
 //post account
 app.post("/api/register", function (req, res) {
+  try {
     let sql = `INSERT INTO account(email, password) VALUES (?)`;
   
     let values = [req.body.email, md5(req.body.password)];
   
     conn.query(sql, [values], (err, results) => {
-      if (err) throw err;
-      res.send(JSON.stringify({ status: 200, error: null, response: results }));
+        res.send(JSON.stringify({error: err, response: results }));
     });
+  } catch (error) {
+    return error.message 
+  }
+    
+   
   });
 /****  END CRUD ACCOUNT*****/
 
@@ -207,14 +212,20 @@ app.get("/api/users/:id", (req, res) => {
 
 //post user
 app.post("/api/users", function (req, res) {
-  let sql = `INSERT INTO user (id_account, nama, gender, tempat_lahir, ttl , no_hp, nama_ibu, nama_ayah , provinsi, kota, kec, kel, alamat) VALUES (?)`;
+  try {
+    let sql = `INSERT INTO user (id_account, nama, gender, tempat_lahir, ttl , no_hp, nama_ibu, nama_ayah , provinsi, kota, kec, kel, alamat) VALUES (?)`;
 
-  let values = [req.body.id_account, req.body.nama, req.body.gender, req.body.tempat_lahir, req.body.ttl, req.body.no_hp, req.body.nama_ibu, req.body.nama_ayah, req.body.provinsi, req.body.kota, req.body.kec, req.body.kel, req.body.alamat];
-
-  conn.query(sql, [values], (err, results) => {
-    if (err) throw err;
-    res.send(JSON.stringify({ status: 200, error: null, response: results }));
-  });
+    let values = [req.body.id_account, req.body.nama, req.body.gender, req.body.tempat_lahir, req.body.ttl, req.body.no_hp, req.body.nama_ibu, req.body.nama_ayah, req.body.provinsi, req.body.kota, req.body.kec, req.body.kel, req.body.alamat];
+  
+    conn.query(sql, [values], (err, results) => {
+      res.send(JSON.stringify({error: err, response: results }));
+      
+   
+    });
+  } catch (error) {
+    return error.message 
+  }
+ 
 });
 
 //update users
@@ -223,17 +234,7 @@ app.put("/api/users/:id", async (req, res) => {
     let sql ="UPDATE user SET nama= ? , gender= ?, tempat_lahir=?, ttl= ?, no_hp= ? , nama_ibu= ?, nama_ayah= ? , provinsi= ?, kota= ?, kec= ? , kel= ? , alamat= ? WHERE id_account=" + req.params.id;
 
     let query = await conn.query(sql, [req.body.nama, req.body.gender, req.body.tempat_lahir ,req.body.ttl, req.body.no_hp, req.body.nama_ibu, req.body.nama_ayah, req.body.provinsi, req.body.kota, req.body.kec, req.body.kel, req.body.alamat],  (err, results) => {
-      //if (err) return next(err);
-      try {
-        if(err){
-          res.send(JSON.stringify({status: 500, error: err, response: results }));
-        }
-        else{
-          res.send(JSON.stringify({ status: 200, error: "else", response: results }));
-        }
-      } catch (error) {
-        res.send(JSON.stringify({ status: 200, error: err, response: results }));
-      }
+      res.send(JSON.stringify({error: err, response: results }));
      
     });
   } catch (error) {
@@ -273,24 +274,33 @@ app.get("/api/healthcheck/:id", (req, res) => {
 
 //post healthceck
 app.post("/api/healthcheck", function (req, res) {
-  let sql = `INSERT INTO Healt_Check(id_account, asma, diabetes, imun, hamil, hipertensi, kardiovas, kanker, ginjal, hati, paru, tbc, lainnya) VALUES (?)`;
+  try {
+    let sql = `INSERT INTO Healt_Check(id_account, asma, diabetes, imun, hamil, hipertensi, kardiovas, kanker, ginjal, hati, paru, tbc, lainnya) VALUES (?)`;
 
-  let values = [req.body.id_account, req.body.asma, req.body.diabetes, req.body.imun, req.body.hamil, req.body.hipertensi, req.body.kardiovas, req.body.kanker, req.body.ginjal, req.body.hati, req.body.paru, req.body.tbc, req.body.lainnya];
+    let values = [req.body.id_account, req.body.asma, req.body.diabetes, req.body.imun, req.body.hamil, req.body.hipertensi, req.body.kardiovas, req.body.kanker, req.body.ginjal, req.body.hati, req.body.paru, req.body.tbc, req.body.lainnya];
+  
+    conn.query(sql, [values], (err, results) => {
+      res.send(JSON.stringify({error: err, response: results }));
+    });
+    
+  } catch (error) {
+    return error.message
+  }
 
-  conn.query(sql, [values], (err, results) => {
-    if (err) throw err;
-    res.send(JSON.stringify({ status: 200, error: null, response: results }));
-  });
 });
 
 
 //update healtcheack
 app.put("/api/healthcheck/:id", (req, res) => {
-  let sql = "UPDATE Healt_Check SET id_account= ? , asma= ? , diabetes= ? , imun= ? , hamil= ? , hipertensi= ? , kardiovas= ? , kanker= ? , ginjal= ?, hati= ? , paru= ?, tbc= ? , lainnya= ? WHERE id_account=" +req.params.id
+  try {
+    let sql = "UPDATE Healt_Check SET id_account= ? , asma= ? , diabetes= ? , imun= ? , hamil= ? , hipertensi= ? , kardiovas= ? , kanker= ? , ginjal= ?, hati= ? , paru= ?, tbc= ? , lainnya= ? WHERE id_account=" +req.params.id
   let query = conn.query(sql, [req.body.id_account, req.body.asma, req.body.diabetes, req.body.imun, req.body.hamil, req.body.hipertensi, req.body.kardiovas, req.body.kanker, req.body.ginjal, req.body.hati, req.body.paru, req.body.tbc, req.body.lainnya], (err, results) => {
-    if (err) throw err;
-    res.send(JSON.stringify({ status: 200, error: null, response: results }));
+    res.send(JSON.stringify({error: err, response: results }));
   });
+  } catch (error) {
+    return error.message
+  }
+  
 });
 
 //Delete healthcheck
