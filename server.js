@@ -9,6 +9,14 @@ var md5 = require('md5');
 // parse application/json
 app.use(bodyParser.json());
 app.use(cors());
+app.use(function(error, request, response, next) {
+  console.log("Error handler: ", error);
+
+  // Send an error message to the user.
+  response.status(500).json({error:error.message});
+
+  // Optionally log the request options so you can analyze it later.
+});
 //create database connection
 const conn = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -126,12 +134,17 @@ app.get("/api/accounts/:id", (req, res) => {
 });
 
 //update account
-app.put("/api/accounts/:id", (req, res) => {
-  let sql = "UPDATE account SET email= ? , password= ? WHERE id_account=" + req.params.id;
-  let query = conn.query(sql, [req.body.email, md5(req.body.password)], (err, results) => {
-    if (err) throw err;
-    res.send(JSON.stringify({ status: 200, error: null, response: results }));
-  });
+app.put("/api/accounts/:id", (req, res, next) => {
+  try {
+    let sql = "UPDATE account SET email= ? , password= ? WHERE id_account=" + req.params.id;
+    let query = conn.query(sql, [req.body.email, md5(req.body.password)], (err, results) => {
+      if (err) throw err.message;
+      res.send(JSON.stringify({ status: 200, error: null, response: results }));
+    });
+  } catch (error) {
+    return error.message 
+  }
+ 
 });
 
 //Delete users
@@ -205,13 +218,28 @@ app.post("/api/users", function (req, res) {
 });
 
 //update users
-app.put("/api/users/:id", (req, res) => {
-  let sql ="UPDATE user SET nama= ? , gender= ?, tempat_lahir=?, ttl= ?, no_hp= ? , nama_ibu= ?, nama_ayah= ? , provinsi= ?, kota= ?, kec= ? , kel= ? , alamat= ? WHERE id_account=" + req.params.id;
+app.put("/api/users/:id", async (req, res) => {
+  try {
+    let sql ="UPDATE user SET nama= ? , gender= ?, tempat_lahir=?, ttl= ?, no_hp= ? , nama_ibu= ?, nama_ayah= ? , provinsi= ?, kota= ?, kec= ? , kel= ? , alamat= ? WHERE id_account=" + req.params.id;
 
-  let query = conn.query(sql, [req.body.nama, req.body.gender, req.body.tempat_lahir ,req.body.ttl, req.body.no_hp, req.body.nama_ibu, req.body.nama_ayah, req.body.provinsi, req.body.kota, req.body.kec, req.body.kel, req.body.alamat], (err, results) => {
-    if (err) throw err;
-    res.send(JSON.stringify({ status: 200, error: null, response: results }));
-  });
+    let query = await conn.query(sql, [req.body.nama, req.body.gender, req.body.tempat_lahir ,req.body.ttl, req.body.no_hp, req.body.nama_ibu, req.body.nama_ayah, req.body.provinsi, req.body.kota, req.body.kec, req.body.kel, req.body.alamat],  (err, results) => {
+      //if (err) return next(err);
+      try {
+        if(err){
+          res.send(JSON.stringify({status: 500, error: err, response: results }));
+        }
+        else{
+          res.send(JSON.stringify({ status: 200, error: "else", response: results }));
+        }
+      } catch (error) {
+        res.send(JSON.stringify({ status: 200, error: err, response: results }));
+      }
+     
+    });
+  } catch (error) {
+    return error.message
+  }
+
 });
 
 //Delete users
