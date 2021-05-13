@@ -72,7 +72,7 @@ conn.connect((err) => {
       });
 
       var sqlTableKipiDaily =
-      "CREATE TABLE IF NOT EXISTS Form_Kipi_Daily (id INT NOT NULL, id_account INT NOT NULL, tanggal DATE, lainnya TEXT, diagnosis TEXT, PRIMARY KEY (id), FOREIGN KEY (id_account) REFERENCES account(id_account)) ";
+      "CREATE TABLE IF NOT EXISTS Form_Kipi_Daily (id INT NOT NULL, id_account INT NOT NULL, tanggal DATE, lainnya TEXT, diagnosis TEXT, FOREIGN KEY (id_account) REFERENCES account(id_account), FOREIGN KEY (id) REFERENCES Form_Checklist(id_form)) ";
 
       conn.query(sqlTableKipiDaily, function (err, result) {
           if (err !== null) {
@@ -84,7 +84,7 @@ conn.connect((err) => {
       });
 
       var sqlTableFormChecklist =
-      "CREATE TABLE IF NOT EXISTS Form_Checklist (id_form INT NOT NULL, id_checklist INT NOT NULL, FOREIGN KEY (id_form) REFERENCES Form_Kipi_Daily(id)) ";
+      "CREATE TABLE IF NOT EXISTS Form_Checklist (id_form INT NOT NULL AUTO_INCREMENT, id_checklist INT NOT NULL, PRIMARY KEY (id_form), FOREIGN KEY (id_checklist) REFERENCES Checklist(id)) ";
 
       conn.query(sqlTableFormChecklist, function (err, result) {
           if (err !== null) {
@@ -96,7 +96,7 @@ conn.connect((err) => {
       });
 
       var sqlTableChecklist =
-      "CREATE TABLE IF NOT EXISTS Checklist (id INT NOT NULL, nama_gejala VARCHAR(255), FOREIGN KEY (id) REFERENCES Form_Checklist(id_form)) ";
+      "CREATE TABLE IF NOT EXISTS Checklist (id INT NOT NULL AUTO_INCREMENT, nama_gejala VARCHAR(255), PRIMARY KEY (id)) ";
 
       conn.query(sqlTableChecklist, function (err, result) {
           if (err !== null) {
