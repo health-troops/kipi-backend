@@ -253,7 +253,7 @@ app.delete("/api/users/:id", (req, res) => {
 });
 /*** END CRUD USER */
 
-/*** START CRUP DAILY_KIPI*/
+/*** START CRUP HEALTHCHECK*/
 //get all healthcheck
 app.get("/api/healthcheck", (req, res) => {
   let sql = "SELECT * FROM Healt_Check";
@@ -311,9 +311,67 @@ app.delete("/api/healthcheck/:id", (req, res) => {
     res.send(JSON.stringify({ status: 200, error: null, response: results }));
   });
 });
-/*** END DAILY KIPI */
+/*** END HEALTH CHECK */
+
+/**** START  CRUD KIPI DAILY *****/
+//get all kipi daily
+app.get("/api/formkipidaily", (req, res) => {
+  let sql = "SELECT * FROM Form_Kipi_Daily";
+  let query = conn.query(sql, (err, results) => {
+    if (err) throw err;
+    res.send(JSON.stringify({ status: 200, error: null, response: results }));
+  });
+});
+
+//get single kipi daily
+app.get("/api/formkipidaily/:id", (req, res) => {
+  let sql = "SELECT * FROM Form_Kipi_Daily WHERE id=" + req.params.id;
+  let query = conn.query(sql, (err, results) => {
+    if (err) throw err;
+    res.send(JSON.stringify({ status: 200, error: null, response: results }));
+  });
+});
+
+//post kipi daily
+app.post("/api/formkipidaily", function (req, res) {
+  try {
+    let sql = `INSERT INTO Form_Kipi_Daily (id, id_account, tanggal, lainnya, diagnosis) VALUES (?)`;
+
+    let values = [req.body.id, req.body.id_account, req.body.tanggal, req.body.lainnya, req.body.diagnosis];
+  
+    conn.query(sql, [values], (err, results) => {
+      res.send(JSON.stringify({error: err, response: results }));
+    });
+    
+  } catch (error) {
+    return error.message
+  }
+
+});
 
 
+//update kipi daily
+app.put("/api/formkipidaily/:id", (req, res) => {
+  try {
+    let sql = "UPDATE Form_Kipi_Daily SET id_account= ? , tanggal= ? , lainnya= ? , diagnosis= ? WHERE id=" +req.params.id
+  let query = conn.query(sql, [req.body.id_account, req.body.tanggal, req.body.lainnya, req.body.diagnosis], (err, results) => {
+    res.send(JSON.stringify({error: err, response: results }));
+  });
+  } catch (error) {
+    return error.message
+  }
+  
+});
+
+//Delete kipi daily
+app.delete("/api/formkipidaily/:id", (req, res) => {
+  let sql = "DELETE FROM Form_Kipi_Daily WHERE id=" + req.params.id + "";
+  let query = conn.query(sql, (err, results) => {
+    if (err) throw err;
+    res.send(JSON.stringify({ status: 200, error: null, response: results }));
+  });
+});
+/**** END CRUD KIPI DAILY */
 //Server listening
 var port = process.env.PORT || 4000;
 app.listen(port, () => {
