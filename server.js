@@ -485,7 +485,7 @@ app.delete("/api/formkipidaily/:id", (req, res) => {
 /**** END CRUD KIPI DAILY */
 
 //test ci cd
-app.get("/api/test", (req, res) => {
+app.get("/api/tests", (req, res) => {
   res.send(JSON.stringify({ status: 200, error: null, response: "halo" }));
 });
 
