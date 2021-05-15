@@ -483,6 +483,12 @@ app.delete("/api/formkipidaily/:id", (req, res) => {
   });
 });
 /**** END CRUD KIPI DAILY */
+
+//test ci cd
+app.get("/api/test", (req, res) => {
+  res.send(JSON.stringify({ status: 200, error: null, response: "halo" }));
+});
+
 //Server listening
 var port = process.env.PORT || 4000;
 app.listen(port, () => {
