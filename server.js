@@ -106,7 +106,7 @@ conn.connect((err) => {
     var sqlTableChecklist = `
       CREATE TABLE IF NOT EXISTS Checklist (
         id INT NOT NULL AUTO_INCREMENT,
-        nama_gejala VARCHAR(255),
+        nama_gejala VARCHAR(255) NOT NULL,
         PRIMARY KEY (id))`;
 
     conn.query(sqlTableChecklist, function (err, result) {
@@ -550,6 +550,73 @@ app.delete("/api/formchecklist/:id", (req, res) => {
   });
 });
 /**** END CRUD FORM CHECKLIST */
+
+/**** START  CRUD CHECKLIST *****/
+//get all checklist
+app.get("/api/checklists", (req, res) => {
+  let sql = "SELECT * FROM Checklist";
+  let query = conn.query(sql, (err, results) => {
+    if (err) throw err;
+    res.send(JSON.stringify({ status: 200, error: null, response: results }));
+  });
+});
+
+//get single checklist
+app.get("/api/checklists/:id", (req, res) => {
+  let sql = "SELECT * FROM Checklist WHERE id = ?";
+  let query = conn.query(sql, [req.params.id], (err, results) => {
+    if (err) throw err;
+    res.send(JSON.stringify({ status: 200, error: null, response: results }));
+  });
+});
+
+//post checklist
+app.post("/api/checklists", function (req, res) {
+  try {
+    let sql = `INSERT INTO Checklist (id, nama_gejala) VALUES (?)`;
+
+    let values = [
+      req.body.id,
+      req.body.nama_gejala
+    ];
+
+    conn.query(sql, [values], (err, results) => {
+      res.send(JSON.stringify({ error: err, response: results }));
+    });
+  } catch (error) {
+    return error.message;
+  }
+});
+
+//update checklist
+app.put("/api/checklists/:id", (req, res) => {
+  try {
+    let sql =
+      "UPDATE Checklist SET nama_gejala = ? WHERE id = ?";
+    let query = conn.query(
+      sql,
+      [
+        req.body.nama_gejala,
+        req.params.id,
+      ],
+      (err, results) => {
+        res.send(JSON.stringify({ error: err, response: results }));
+      }
+    );
+  } catch (error) {
+    return error.message;
+  }
+});
+
+//Delete checklist
+app.delete("/api/checklists/:id", (req, res) => {
+  let sql = "DELETE FROM Checklist WHERE id = ?";
+  let query = conn.query(sql, [req.params.id], (err, results) => {
+    if (err) throw err;
+    res.send(JSON.stringify({ status: 200, error: null, response: results }));
+  });
+});
+/**** END CRUD CHECKLIST */
 
 //test ci cd
 app.get("/api/tests", (req, res) => {
