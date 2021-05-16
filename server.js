@@ -484,6 +484,73 @@ app.delete("/api/formkipidaily/:id", (req, res) => {
 });
 /**** END CRUD KIPI DAILY */
 
+/**** START  CRUD FORM CHECKLIST *****/
+//get all form checklist
+app.get("/api/formchecklist", (req, res) => {
+  let sql = "SELECT * FROM Form_Checklist";
+  let query = conn.query(sql, (err, results) => {
+    if (err) throw err;
+    res.send(JSON.stringify({ status: 200, error: null, response: results }));
+  });
+});
+
+//get single form checklist
+app.get("/api/formchecklist/:id", (req, res) => {
+  let sql = "SELECT * FROM Form_Checklist WHERE id_form = ?";
+  let query = conn.query(sql, [req.params.id], (err, results) => {
+    if (err) throw err;
+    res.send(JSON.stringify({ status: 200, error: null, response: results }));
+  });
+});
+
+//post form checklist
+app.post("/api/formchecklist", function (req, res) {
+  try {
+    let sql = `INSERT INTO Form_Checklist (id_form, id_checklist) VALUES (?)`;
+
+    let values = [
+      req.body.id_form,
+      req.body.id_checklist
+    ];
+
+    conn.query(sql, [values], (err, results) => {
+      res.send(JSON.stringify({ error: err, response: results }));
+    });
+  } catch (error) {
+    return error.message;
+  }
+});
+
+//update form checklist
+app.put("/api/formchecklist/:id", (req, res) => {
+  try {
+    let sql =
+      "UPDATE Form_Checklist SET id_checklist = ? WHERE id_form = ?";
+    let query = conn.query(
+      sql,
+      [
+        req.body.id_checklist,
+        req.params.id,
+      ],
+      (err, results) => {
+        res.send(JSON.stringify({ error: err, response: results }));
+      }
+    );
+  } catch (error) {
+    return error.message;
+  }
+});
+
+//Delete form checklist
+app.delete("/api/formchecklist/:id", (req, res) => {
+  let sql = "DELETE FROM Form_Checklist WHERE id_form = ?";
+  let query = conn.query(sql, [req.params.id], (err, results) => {
+    if (err) throw err;
+    res.send(JSON.stringify({ status: 200, error: null, response: results }));
+  });
+});
+/**** END CRUD FORM CHECKLIST */
+
 //test ci cd
 app.get("/api/tests", (req, res) => {
   res.send(JSON.stringify({ status: 200, error: null, response: "halo" }));
