@@ -78,25 +78,33 @@ conn.connect((err) => {
       }
     });
 
-    var sqlTableHealtCheck = `
-      CREATE TABLE IF NOT EXISTS Health_Check (
+    var sqlTableKomorbid = `
+      CREATE TABLE IF NOT EXISTS Komorbid (
         id_account INT NOT NULL,
-        asma BOOLEAN NOT NULL,
-        diabetes BOOLEAN NOT NULL,
-        imun BOOLEAN NOT NULL,
-        hamil BOOLEAN NOT NULL,
         hipertensi BOOLEAN NOT NULL,
-        kardiovas BOOLEAN NOT NULL,
-        kanker BOOLEAN NOT NULL,
-        ginjal BOOLEAN NOT NULL,
+        diabetes_melitus BOOLEAN NOT NULL,
+        gagal_jantung BOOLEAN NOT NULL,
+        jantung_koroner BOOLEAN NOT NULL,
+        paru_obstruktif_knonis BOOLEAN NOT NULL,
+        asma BOOLEAN NOT NULL,
         hati BOOLEAN NOT NULL,
-        paru BOOLEAN NOT NULL,
         tbc BOOLEAN NOT NULL,
-        lainnya TEXT,
+        autoimun BOOLEAN NOT NULL,
+        kanker BOOLEAN NOT NULL,
+        hiv BOOLEAN NOT NULL,
+        alergi_obat BOOLEAN NOT NULL,
+        kelainan_darah BOOLEAN NOT NULL,
+        hipertiroid BOOLEAN NOT NULL,
+        ginjal BOOLEAN NOT NULL, 
+        dermatitis_atopi BOOLEAN NOT NULL,
+        reaksi_anafilaksis BOOLEAN NOT NULL,
+        urtikaria BOOLEAN NOT NULL,
+        alergi_makanan BOOLEAN NOT NULL,
+        interstitial_lung BOOLEAN NOT NULL,
         PRIMARY KEY (id_account),
         FOREIGN KEY (id_account) REFERENCES account(id_account))`;
 
-    conn.query(sqlTableHealtCheck, function (err, result) {
+    conn.query(sqlTableKomorbid, function (err, result) {
       if (err !== null) {
         console.log(err);
       } else {
@@ -107,6 +115,7 @@ conn.connect((err) => {
       CREATE TABLE IF NOT EXISTS Checklist (
         id INT NOT NULL AUTO_INCREMENT,
         nama_gejala VARCHAR(255) NOT NULL,
+        penanganan TEXT NOT NULL,
         PRIMARY KEY (id))`;
 
     conn.query(sqlTableChecklist, function (err, result) {
@@ -321,10 +330,10 @@ app.delete("/api/users/:id", (req, res) => {
 });
 /*** END CRUD USER */
 
-/*** START CRUP HEALTHCHECK*/
-//get all healthcheck
-app.get("/api/healthcheck", (req, res) => {
-  let sql = "SELECT * FROM Healt_Check";
+/*** START CRUP komorbid*/
+//get all komorbid
+app.get("/api/komorbid", (req, res) => {
+  let sql = "SELECT * FROM Komorbid";
   let query = conn.query(sql, (err, results) => {
     if (err) throw err;
     res.send(JSON.stringify({ status: 200, error: null, response: results }));
@@ -332,8 +341,8 @@ app.get("/api/healthcheck", (req, res) => {
 });
 
 //get single healtcheck
-app.get("/api/healthcheck/:id", (req, res) => {
-  let sql = "SELECT * FROM Healt_Check WHERE id_account = ?";
+app.get("/api/komorbid/:id", (req, res) => {
+  let sql = "SELECT * FROM Komorbid WHERE id_account = ?";
   let query = conn.query(sql, [req.params.id], (err, results) => {
     if (err) throw err;
     res.send(JSON.stringify({ status: 200, error: null, response: results }));
@@ -341,24 +350,32 @@ app.get("/api/healthcheck/:id", (req, res) => {
 });
 
 //post healthceck
-app.post("/api/healthcheck", function (req, res) {
+app.post("/api/komorbid", function (req, res) {
   try {
-    let sql = `INSERT INTO Healt_Check(id_account, asma, diabetes, imun, hamil, hipertensi, kardiovas, kanker, ginjal, hati, paru, tbc, lainnya) VALUES (?)`;
+    let sql = `INSERT INTO Komorbid (id_account, hipertensi, diabetes_melitus, gagal_jantung, jantung_koroner, paru_obstruktif_knonis, asma, hati, tbc, autoimun, kanker, hiv, alergi_obat, kelainan_darah, hipertiroid, ginjal, dermatitis_atopi, reaksi_anafilaksis, urtikaria, alergi_makanan, interstitial_lung) VALUES (?)`;
 
     let values = [
       req.body.id_account,
-      req.body.asma,
-      req.body.diabetes,
-      req.body.imun,
-      req.body.hamil,
       req.body.hipertensi,
-      req.body.kardiovas,
-      req.body.kanker,
-      req.body.ginjal,
+      req.body.diabetes_melitus,
+      req.body.gagal_jantung,
+      req.body.jantung_koroner,
+      req.body.paru_obstruktif_knonis,
+      req.body.asma,
       req.body.hati,
-      req.body.paru,
       req.body.tbc,
-      req.body.lainnya,
+      req.body.autoimun,
+      req.body.kanker,
+      req.body.hiv,
+      req.body.alergi_obat,
+      req.body.kelainan_darah,
+      req.body.hipertiroid,
+      req.body.ginjal,
+      req.body.dermatitis_atopi,
+      req.body.reaksi_anafilaksis,
+      req.body.urtikaria,
+      req.body.alergi_makanan,
+      req.body.interstitial_lung,
     ];
 
     conn.query(sql, [values], (err, results) => {
@@ -369,28 +386,35 @@ app.post("/api/healthcheck", function (req, res) {
   }
 });
 
-//update healtcheack
-app.put("/api/healthcheck/:id", (req, res) => {
+//update komorbid
+app.put("/api/komorbid/:id", (req, res) => {
   try {
     let sql =
-      "UPDATE Healt_Check SET id_account = ? , asma = ? , diabetes = ? , imun = ? , hamil = ? , hipertensi = ? , kardiovas = ? , kanker = ? , ginjal = ?, hati = ? , paru = ?, tbc = ? , lainnya = ? WHERE id_account = ?";
+      "UPDATE Komorbid SET hipertensi = ? , diabetes_melitus = ? , gagal_jantung = ? , jantung_koroner = ? , paru_obstruktif_knonis = ? , asma = ? , hati = ? , tbc = ? , autoimun = ? , kanker = ? , hiv = ? , alergi_obat = ? , kelainan_darah = ? , hipertiroid = ? , ginjal = ? , dermatitis_atopi = ? , reaksi_anafilaksis = ? , urtikaria = ? , alergi_makanan = ? , interstitial_lung = ? WHERE id_account = ?";
     let query = conn.query(
       sql,
       [
-        req.body.id_account,
-        req.body.asma,
-        req.body.diabetes,
-        req.body.imun,
-        req.body.hamil,
-        req.body.hipertensi,
-        req.body.kardiovas,
-        req.body.kanker,
-        req.body.ginjal,
-        req.body.hati,
-        req.body.paru,
-        req.body.tbc,
-        req.body.lainnya,
-        req.params.id,
+      req.body.hipertensi,
+      req.body.diabetes_melitus,
+      req.body.gagal_jantung,
+      req.body.jantung_koroner,
+      req.body.paru_obstruktif_knonis,
+      req.body.asma,
+      req.body.hati,
+      req.body.tbc,
+      req.body.autoimun,
+      req.body.kanker,
+      req.body.hiv,
+      req.body.alergi_obat,
+      req.body.kelainan_darah,
+      req.body.hipertiroid,
+      req.body.ginjal,
+      req.body.dermatitis_atopi,
+      req.body.reaksi_anafilaksis,
+      req.body.urtikaria,
+      req.body.alergi_makanan,
+      req.body.interstitial_lung,
+      req.params.id,
       ],
       (err, results) => {
         res.send(JSON.stringify({ error: err, response: results }));
@@ -401,9 +425,9 @@ app.put("/api/healthcheck/:id", (req, res) => {
   }
 });
 
-//Delete healthcheck
-app.delete("/api/healthcheck/:id", (req, res) => {
-  let sql = "DELETE FROM Healt_Check WHERE id_healthcheck = ?";
+//Delete komorbid
+app.delete("/api/komorbid/:id", (req, res) => {
+  let sql = "DELETE FROM Komorbid WHERE id_account = ?";
   let query = conn.query(sql, [req.params.id], (err, results) => {
     if (err) throw err;
     res.send(JSON.stringify({ status: 200, error: null, response: results }));
@@ -573,11 +597,12 @@ app.get("/api/checklists/:id", (req, res) => {
 //post checklist
 app.post("/api/checklists", function (req, res) {
   try {
-    let sql = `INSERT INTO Checklist (id, nama_gejala) VALUES (?)`;
+    let sql = `INSERT INTO Checklist (id, nama_gejala, penanganan) VALUES (?)`;
 
     let values = [
       req.body.id,
-      req.body.nama_gejala
+      req.body.nama_gejala,
+      req.body.penanganan
     ];
 
     conn.query(sql, [values], (err, results) => {
@@ -592,11 +617,12 @@ app.post("/api/checklists", function (req, res) {
 app.put("/api/checklists/:id", (req, res) => {
   try {
     let sql =
-      "UPDATE Checklist SET nama_gejala = ? WHERE id = ?";
+      "UPDATE Checklist SET nama_gejala = ?, penanganan = ? WHERE id = ?";
     let query = conn.query(
       sql,
       [
         req.body.nama_gejala,
+        req.body.penanganan,
         req.params.id,
       ],
       (err, results) => {
