@@ -127,9 +127,9 @@ conn.connect((err) => {
 
     var sqlTableFormChecklist = `
       CREATE TABLE IF NOT EXISTS Form_Checklist (
-        id_form INT NOT NULL AUTO_INCREMENT,
+        id_form INT NOT NULL,
         id_checklist INT NOT NULL,
-        PRIMARY KEY (id_form),
+        FOREIGN KEY (id_form) REFERENCES Form_Kipi_Daily(id),
         FOREIGN KEY (id_checklist) REFERENCES Checklist(id))`;
 
     conn.query(sqlTableFormChecklist, function (err, result) {
@@ -141,13 +141,17 @@ conn.connect((err) => {
 
     var sqlTableKipiDaily = `
       CREATE TABLE IF NOT EXISTS Form_Kipi_Daily (
-        id INT NOT NULL,
+        id INT NOT NULL AUTO_INCREMENT,
         id_account INT NOT NULL,
         tanggal DATE,
         lainnya TEXT,
         diagnosis TEXT,
-        FOREIGN KEY (id_account) REFERENCES account(id_account),
-        FOREIGN KEY (id) REFERENCES Form_Checklist(id_form))`;
+        PredictionClass0 FLOAT,
+        PredictionClass1 FLOAT,
+        PredictionClass2 FLOAT,
+        Recommendation TEXT,
+        PRIMARY KEY(id),
+        FOREIGN KEY (id_account) REFERENCES account(id_account))`;
 
     conn.query(sqlTableKipiDaily, function (err, result) {
       if (err !== null) {
@@ -457,7 +461,7 @@ app.get("/api/formkipidaily/:id", (req, res) => {
 //post kipi daily
 app.post("/api/formkipidaily", function (req, res) {
   try {
-    let sql = `INSERT INTO Form_Kipi_Daily (id, id_account, tanggal, lainnya, diagnosis) VALUES (?)`;
+    let sql = `INSERT INTO Form_Kipi_Daily (id, id_account, tanggal, lainnya, diagnosis, PredictionClass0, PredictionClass1, PredictionClass2, Recommendation) VALUES (?)`;
 
     let values = [
       req.body.id,
@@ -465,6 +469,10 @@ app.post("/api/formkipidaily", function (req, res) {
       req.body.tanggal,
       req.body.lainnya,
       req.body.diagnosis,
+      req.body.PredictionClass0,
+      req.body.PredictionClass1,
+      req.body.PredictionClass2,
+      req.body.Recommendation
     ];
 
     conn.query(sql, [values], (err, results) => {
@@ -479,7 +487,7 @@ app.post("/api/formkipidaily", function (req, res) {
 app.put("/api/formkipidaily/:id", (req, res) => {
   try {
     let sql =
-      "UPDATE Form_Kipi_Daily SET id_account = ? , tanggal = ? , lainnya = ? , diagnosis = ? WHERE id = ?";
+      "UPDATE Form_Kipi_Daily SET id_account = ? , tanggal = ? , lainnya = ? , diagnosis = ? , PredictionClass0 = ? , PredictionClass1 = ? ,  PredictionClass2 = ?, Recommendation = ?  WHERE id = ?";
     let query = conn.query(
       sql,
       [
@@ -487,6 +495,10 @@ app.put("/api/formkipidaily/:id", (req, res) => {
         req.body.tanggal,
         req.body.lainnya,
         req.body.diagnosis,
+        req.body.PredictionClass0,
+        req.body.PredictionClass1,
+        req.body.PredictionClass2,
+        req.body.Recommendation,
         req.params.id,
       ],
       (err, results) => {
