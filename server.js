@@ -664,7 +664,7 @@ app.get("/api/test", (req, res) => {
 
 
 //post kipi daily
-app.post("/api/test2", function (req, res) {
+app.post("/api/formkipi", function (req, res) {
   try {
     let sql = `INSERT INTO Form_Kipi_Daily (id, id_account, tanggal, lainnya, diagnosis, PredictionClass0, PredictionClass1, PredictionClass2, Recommendation) VALUES (?)`;
 
@@ -681,15 +681,17 @@ app.post("/api/test2", function (req, res) {
     ];
 
     conn.query(sql, [values], (err, results) => {
-      console.log(req.body.checklist)
       let last_id = results.insertId
-      console.log("last id :" + last_id);
 
       let sql2 = `INSERT INTO Form_Checklist (id_form, id_checklist) VALUES ?`;
 
-      var values2 = [[ last_id, 11],[ last_id, 12]]
+      var values2 = []
+      
+      for(let i = 0; i < req.body.checklist.length; i++){
+        values2.push([last_id, req.body.checklist[i]])
+      }
+
       conn.query(sql2, [values2], (err2, results2) => {
-        console.log(sql2)
         res.send(JSON.stringify({ error: err2, response: results2 }));
       });
 
