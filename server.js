@@ -542,14 +542,11 @@ app.get("/api/formchecklist/:id", (req, res) => {
 //post form checklist
 app.post("/api/formchecklist", function (req, res) {
   try {
-    let sql = `INSERT INTO Form_Checklist (id_form, id_checklist) VALUES (?)`;
-
-    let values = [
-      req.body.id_form,
-      req.body.id_checklist
-    ];
-
+    let sql = `INSERT INTO Form_Checklist (id_form, id_checklist) VALUES ?`;
+  
+    let values = req.body
     conn.query(sql, [values], (err, results) => {
+      console.log(sql)
       res.send(JSON.stringify({ error: err, response: results }));
     });
   } catch (error) {
@@ -665,6 +662,42 @@ app.get("/api/test", (req, res) => {
   });
 });
 
+
+//post kipi daily
+app.post("/api/test2", function (req, res) {
+  try {
+    let sql = `INSERT INTO Form_Kipi_Daily (id, id_account, tanggal, lainnya, diagnosis, PredictionClass0, PredictionClass1, PredictionClass2, Recommendation) VALUES (?)`;
+
+    let values = [
+      req.body.id,
+      req.body.id_account,
+      req.body.tanggal,
+      req.body.lainnya,
+      req.body.diagnosis,
+      req.body.PredictionClass0,
+      req.body.PredictionClass1,
+      req.body.PredictionClass2,
+      req.body.Recommendation
+    ];
+
+    conn.query(sql, [values], (err, results) => {
+      console.log(req.body.checklist)
+      let last_id = results.insertId
+      console.log("last id :" + last_id);
+
+      let sql2 = `INSERT INTO Form_Checklist (id_form, id_checklist) VALUES ?`;
+
+      var values2 = [[ last_id, 11],[ last_id, 12]]
+      conn.query(sql2, [values2], (err2, results2) => {
+        console.log(sql2)
+        res.send(JSON.stringify({ error: err2, response: results2 }));
+      });
+
+    });
+  } catch (error) {
+    return error.message;
+  }
+});
 
 //Server listening
 var port = process.env.PORT || 4000;
