@@ -125,20 +125,6 @@ conn.connect((err) => {
       }
     });
 
-    var sqlTableFormChecklist = `
-      CREATE TABLE IF NOT EXISTS Form_Checklist (
-        id_form INT NOT NULL,
-        id_checklist INT NOT NULL,
-        FOREIGN KEY (id_form) REFERENCES Form_Kipi_Daily(id),
-        FOREIGN KEY (id_checklist) REFERENCES Checklist(id))`;
-
-    conn.query(sqlTableFormChecklist, function (err, result) {
-      if (err !== null) {
-        console.log(err);
-      } else {
-      }
-    });
-
     var sqlTableKipiDaily = `
       CREATE TABLE IF NOT EXISTS Form_Kipi_Daily (
         id INT NOT NULL AUTO_INCREMENT,
@@ -154,6 +140,21 @@ conn.connect((err) => {
         FOREIGN KEY (id_account) REFERENCES account(id_account))`;
 
     conn.query(sqlTableKipiDaily, function (err, result) {
+      if (err !== null) {
+        console.log(err);
+      } else {
+      }
+    });
+
+    var sqlTableFormChecklist = `
+      CREATE TABLE IF NOT EXISTS Form_Checklist (
+        id_form INT NOT NULL,
+        id_checklist INT NOT NULL,
+        PRIMARY KEY (id_form, id_checklist),
+        FOREIGN KEY (id_form) REFERENCES Form_Kipi_Daily(id),
+        FOREIGN KEY (id_checklist) REFERENCES Checklist(id))`;
+
+    conn.query(sqlTableFormChecklist, function (err, result) {
       if (err !== null) {
         console.log(err);
       } else {
@@ -398,27 +399,27 @@ app.put("/api/komorbid/:id", (req, res) => {
     let query = conn.query(
       sql,
       [
-      req.body.hipertensi,
-      req.body.diabetes_melitus,
-      req.body.gagal_jantung,
-      req.body.jantung_koroner,
-      req.body.paru_obstruktif_knonis,
-      req.body.asma,
-      req.body.hati,
-      req.body.tbc,
-      req.body.autoimun,
-      req.body.kanker,
-      req.body.hiv,
-      req.body.alergi_obat,
-      req.body.kelainan_darah,
-      req.body.hipertiroid,
-      req.body.ginjal,
-      req.body.dermatitis_atopi,
-      req.body.reaksi_anafilaksis,
-      req.body.urtikaria,
-      req.body.alergi_makanan,
-      req.body.interstitial_lung,
-      req.params.id,
+        req.body.hipertensi,
+        req.body.diabetes_melitus,
+        req.body.gagal_jantung,
+        req.body.jantung_koroner,
+        req.body.paru_obstruktif_knonis,
+        req.body.asma,
+        req.body.hati,
+        req.body.tbc,
+        req.body.autoimun,
+        req.body.kanker,
+        req.body.hiv,
+        req.body.alergi_obat,
+        req.body.kelainan_darah,
+        req.body.hipertiroid,
+        req.body.ginjal,
+        req.body.dermatitis_atopi,
+        req.body.reaksi_anafilaksis,
+        req.body.urtikaria,
+        req.body.alergi_makanan,
+        req.body.interstitial_lung,
+        req.params.id,
       ],
       (err, results) => {
         res.send(JSON.stringify({ error: err, response: results }));
@@ -472,7 +473,7 @@ app.post("/api/formkipidaily", function (req, res) {
       req.body.PredictionClass0,
       req.body.PredictionClass1,
       req.body.PredictionClass2,
-      req.body.Recommendation
+      req.body.Recommendation,
     ];
 
     conn.query(sql, [values], (err, results) => {
@@ -543,10 +544,10 @@ app.get("/api/formchecklist/:id", (req, res) => {
 app.post("/api/formchecklist", function (req, res) {
   try {
     let sql = `INSERT INTO Form_Checklist (id_form, id_checklist) VALUES ?`;
-  
-    let values = req.body
+
+    let values = req.body;
     conn.query(sql, [values], (err, results) => {
-      console.log(sql)
+      console.log(sql);
       res.send(JSON.stringify({ error: err, response: results }));
     });
   } catch (error) {
@@ -557,14 +558,10 @@ app.post("/api/formchecklist", function (req, res) {
 //update form checklist
 app.put("/api/formchecklist/:id", (req, res) => {
   try {
-    let sql =
-      "UPDATE Form_Checklist SET id_checklist = ? WHERE id_form = ?";
+    let sql = "UPDATE Form_Checklist SET id_checklist = ? WHERE id_form = ?";
     let query = conn.query(
       sql,
-      [
-        req.body.id_checklist,
-        req.params.id,
-      ],
+      [req.body.id_checklist, req.params.id],
       (err, results) => {
         res.send(JSON.stringify({ error: err, response: results }));
       }
@@ -608,11 +605,7 @@ app.post("/api/checklists", function (req, res) {
   try {
     let sql = `INSERT INTO Checklist (id, nama_gejala, penanganan) VALUES (?)`;
 
-    let values = [
-      req.body.id,
-      req.body.nama_gejala,
-      req.body.penanganan
-    ];
+    let values = [req.body.id, req.body.nama_gejala, req.body.penanganan];
 
     conn.query(sql, [values], (err, results) => {
       res.send(JSON.stringify({ error: err, response: results }));
@@ -629,11 +622,7 @@ app.put("/api/checklists/:id", (req, res) => {
       "UPDATE Checklist SET nama_gejala = ?, penanganan = ? WHERE id = ?";
     let query = conn.query(
       sql,
-      [
-        req.body.nama_gejala,
-        req.body.penanganan,
-        req.params.id,
-      ],
+      [req.body.nama_gejala, req.body.penanganan, req.params.id],
       (err, results) => {
         res.send(JSON.stringify({ error: err, response: results }));
       }
@@ -662,7 +651,6 @@ app.get("/api/test", (req, res) => {
   });
 });
 
-
 //post kipi daily
 app.post("/api/formkipi", function (req, res) {
   try {
@@ -677,24 +665,23 @@ app.post("/api/formkipi", function (req, res) {
       req.body.PredictionClass0,
       req.body.PredictionClass1,
       req.body.PredictionClass2,
-      req.body.Recommendation
+      req.body.Recommendation,
     ];
 
     conn.query(sql, [values], (err, results) => {
-      let last_id = results.insertId
+      let last_id = results.insertId;
 
       let sql2 = `INSERT INTO Form_Checklist (id_form, id_checklist) VALUES ?`;
 
-      var values2 = []
-      
-      for(let i = 0; i < req.body.checklist.length; i++){
-        values2.push([last_id, req.body.checklist[i]])
+      var values2 = [];
+
+      for (let i = 0; i < req.body.checklist.length; i++) {
+        values2.push([last_id, req.body.checklist[i]]);
       }
 
       conn.query(sql2, [values2], (err2, results2) => {
         res.send(JSON.stringify({ error: err2, response: results2 }));
       });
-
     });
   } catch (error) {
     return error.message;
@@ -708,4 +695,3 @@ app.listen(port, () => {
     "Server started on port 4000..." + "DB HOST : " + process.env.DB_HOST
   );
 });
-
