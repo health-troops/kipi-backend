@@ -443,8 +443,18 @@ app.delete("/api/komorbid/:id", (req, res) => {
 /**** START  CRUD KIPI DAILY *****/
 //get all kipi daily
 app.get("/api/formkipidaily", (req, res) => {
-  let sql = "SELECT * FROM Form_Kipi_Daily";
-  let query = conn.query(sql, (err, results) => {
+  let sql, args;
+  let id_account = req.query.id_account;
+
+  if (id_account == null) {
+    sql = "SELECT * FROM Form_Kipi_Daily";
+    args = [];
+  } else {
+    sql = "SELECT * FROM Form_Kipi_Daily WHERE id_account = ?";
+    args = [id_account];
+  }
+
+  conn.query(sql, args, (err, results) => {
     if (err) throw err;
     res.send(JSON.stringify({ status: 200, error: null, response: results }));
   });
