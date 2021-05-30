@@ -472,10 +472,9 @@ app.get("/api/formkipidaily/:id", (req, res) => {
 //post kipi daily
 app.post("/api/formkipidaily", function (req, res) {
   try {
-    let sql = `INSERT INTO Form_Kipi_Daily (id, id_account, tanggal, lainnya, diagnosis, PredictionClass0, PredictionClass1, PredictionClass2, Recommendation) VALUES (?)`;
+    let sql = `INSERT INTO Form_Kipi_Daily (id_account, tanggal, lainnya, diagnosis, PredictionClass0, PredictionClass1, PredictionClass2, Recommendation) VALUES (?)`;
 
     let values = [
-      req.body.id,
       req.body.id_account,
       req.body.tanggal,
       req.body.lainnya,
