@@ -549,6 +549,16 @@ app.get("/api/formchecklist/:id", (req, res) => {
   });
 });
 
+//get single form checklist nama_gejala
+app.get("/api/formchecklist/:id/nama-gejala", (req, res) => {
+  let sql = `SELECT nama_gejala FROM Checklist WHERE id IN (
+    SELECT id_checklist FROM Form_Checklist WHERE id_form = ?)`;
+  let query = conn.query(sql, [req.params.id], (err, results) => {
+    if (err) throw err;
+    res.send(JSON.stringify({ status: 200, error: null, response: results }));
+  });
+});
+
 //post form checklist
 app.post("/api/formchecklist", function (req, res) {
   try {
